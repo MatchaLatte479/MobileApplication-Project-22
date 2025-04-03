@@ -45,10 +45,10 @@ class _NavigationPageState extends State<NavigationPage> {
         
         items: const [ 
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined),label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.newspaper_outlined),label: 'Evaluation'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined),label: 'Calculator'),
-        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined),label: 'History'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outlined),label: 'NearMe'),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined),label: 'Evaluation'),
+        BottomNavigationBarItem(icon: Icon(Icons.calculate_outlined),label: 'Calculator'),
+        BottomNavigationBarItem(icon: Icon(Icons.history),label: 'History'),
+        BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined),label: 'NearMe'),
       ],),
       body: page[myCurrentIndex]
     );
