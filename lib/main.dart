@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'pages/login.dart';
-import 'pages/calculator.dart';
-
+import 'package:project/navbar/navbar.dart';
+// import 'pages/login.dart';
 void main() {
   runApp(MyApp());
 }
@@ -15,10 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(), 
-      routes: {
-        '/calculator': (context) => CalculatorScreen(),
-      },
+      home: NavigationPage(), 
     );
   }
 }

@@ -20,10 +20,10 @@ class _NavigationPageState extends State<NavigationPage> {
   int myCurrentIndex = 0;
   List page = const[
     HomePage(),
-    CalculatorPage(),
-    NearMePage(),
-    HistoryPage(),
     EvaluationPage(),
+    CalculatorPage(),
+    HistoryPage(),
+    NearMePage(),
   ];
 
   @override
@@ -33,9 +33,9 @@ class _NavigationPageState extends State<NavigationPage> {
         
         currentIndex: myCurrentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromARGB(255, 90, 78, 66),
-        selectedItemColor: Color.fromARGB(255, 253, 242, 210),
-        unselectedItemColor: Color.fromARGB(255, 119, 104, 88),
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.black,
         
         onTap: (index){
           setState(() {
@@ -45,10 +45,10 @@ class _NavigationPageState extends State<NavigationPage> {
         
         items: const [ 
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined),label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.newspaper_outlined),label: 'Article'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined),label: 'Quest'),
-        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined),label: 'Dashboard'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outlined),label: 'Profile'),
+        BottomNavigationBarItem(icon: Icon(Icons.newspaper_outlined),label: 'Evaluation'),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined),label: 'Calculator'),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined),label: 'History'),
+        BottomNavigationBarItem(icon: Icon(Icons.person_outlined),label: 'NearMe'),
       ],),
       body: page[myCurrentIndex]
     );

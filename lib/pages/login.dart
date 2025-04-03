@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'calculator.dart';
 import 'signup.dart'; // Make sure this import exists
-
+import 'calculator.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -24,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_usernameController.text == 'admin' && _passwordController.text == '1234') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => CalculatorScreen()),
+          MaterialPageRoute(builder: (context) => CalculatorPage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
