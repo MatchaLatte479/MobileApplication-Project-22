@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'resident.dart';
-import 'office.dart'; // อย่าลืม import ไฟล์ office.dart
+import 'office.dart';
 
-class CalculatorScreen extends StatelessWidget {
+class CalculatorPage extends StatelessWidget {
+  const CalculatorPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('คำนวณ Solar Cell'),
+        title: const Text('คำนวณ Solar Cell'),
       ),
       body: Center(
         child: Padding(
@@ -19,19 +21,20 @@ class CalculatorScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ResidentScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => ResidentPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[700],
-                  fixedSize: Size(300, 179),
+                  fixedSize: const Size(300, 179),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.home, color: Colors.white, size: 40),
                     SizedBox(height: 8),
                     Text(
@@ -41,24 +44,25 @@ class CalculatorScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OfficeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => OfficeScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[400],
-                  fixedSize: Size(300, 179),
+                  fixedSize: const Size(300, 179),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.business, color: Colors.white, size: 40),
                     SizedBox(height: 8),
                     Text(

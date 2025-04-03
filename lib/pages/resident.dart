@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class ResidentScreen extends StatefulWidget {
+class ResidentPage extends StatefulWidget {
   @override
   _ResidentScreenState createState() => _ResidentScreenState();
 }
 
-class _ResidentScreenState extends State<ResidentScreen> {
+class _ResidentScreenState extends State<ResidentPage> {
   final List<Map<String, dynamic>> appliances = [
     {'name': 'หลอดไฟ', 'icon': Icons.lightbulb},
     {'name': 'ตู้เย็น', 'icon': Icons.kitchen},
