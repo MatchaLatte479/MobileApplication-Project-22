@@ -14,14 +14,18 @@ class _ResidentScreenState extends State<ResidentPage> {
     {'name': 'ทีวี', 'icon': Icons.tv},
     {'name': 'ไมโครเวฟ', 'icon': Icons.microwave},
   ];
+
   final Map<String, Map<String, TextEditingController>> selectedAppliances = {};
+  Widget? _resultWidget;
 
   void addAppliance(BuildContext context, TapDownDetails details) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
-          details.globalPosition, details.globalPosition.translate(1, 1)),
+        details.globalPosition,
+        details.globalPosition.translate(1, 1),
+      ),
       Offset.zero & overlay.size,
     );
 
@@ -56,11 +60,86 @@ class _ResidentScreenState extends State<ResidentPage> {
         controllers['hours']?.dispose();
       });
       selectedAppliances.clear();
+      _resultWidget = null;
     });
   }
 
   void _calculate() {
-    print('Calculating...');
+    Map<String, double> powerRates = {
+      'หลอดไฟ': 0.02,
+      'ตู้เย็น': 0.15,
+      'พัดลม': 0.07,
+      'แอร์': 1.2,
+      'ทีวี': 0.1,
+      'ไมโครเวฟ': 1.2,
+    };
+
+    double totalKWhPerDay = 0.0;
+
+    selectedAppliances.forEach((name, controllers) {
+      int quantity = int.tryParse(controllers['quantity']?.text ?? '') ?? 0;
+      int hours = int.tryParse(controllers['hours']?.text ?? '') ?? 0;
+      double power = powerRates[name] ?? 0.0;
+
+      totalKWhPerDay += quantity * hours * power;
+    });
+
+    double estimatedKW = (totalKWhPerDay / 4).ceilToDouble();
+
+    final List<Map<String, dynamic>> solarOptions = [
+      {'kw': 3, 'price': 140000},
+      {'kw': 5, 'price': 195400},
+      {'kw': 10, 'price': 329600},
+      {'kw': 15, 'price': 470800},
+      {'kw': 20, 'price': 623900},
+      {'kw': 30, 'price': 929900},
+      {'kw': 60, 'price': 1824400},
+      {'kw': 100, 'price': 3001400},
+    ];
+
+    final matched = solarOptions.firstWhere(
+      (option) => option['kw'] >= estimatedKW,
+      orElse: () => solarOptions.last,
+    );
+
+    setState(() {
+      _resultWidget = Container(
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(
+          color: Colors.green[100],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Solar Rooftop ${matched['kw']} kW',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'เหมาะกับคุณ!',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.green[700],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   @override
@@ -219,6 +298,7 @@ class _ResidentScreenState extends State<ResidentPage> {
               ],
             ),
           ),
+          if (_resultWidget != null) _resultWidget!,
         ],
       ),
     );
