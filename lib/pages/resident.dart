@@ -87,14 +87,14 @@ class _ResidentScreenState extends State<ResidentPage> {
     double estimatedKW = (totalKWhPerDay / 4).ceilToDouble();
 
     final List<Map<String, dynamic>> solarOptions = [
-      {'kw': 3, 'price': 140000},
-      {'kw': 5, 'price': 195400},
-      {'kw': 10, 'price': 329600},
-      {'kw': 15, 'price': 470800},
-      {'kw': 20, 'price': 623900},
-      {'kw': 30, 'price': 929900},
-      {'kw': 60, 'price': 1824400},
-      {'kw': 100, 'price': 3001400},
+      {'kw': 3, 'price': 98000},
+      {'kw': 5, 'price': 135000},
+      {'kw': 10, 'price': 215000},
+      {'kw': 15, 'price': 300000},
+      {'kw': 20, 'price': 390000},
+      {'kw': 30, 'price': 530000},
+      {'kw': 60, 'price': 1200000},
+      {'kw': 100, 'price': 2000000},
     ];
 
     final matched = solarOptions.firstWhere(
