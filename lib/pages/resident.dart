@@ -112,9 +112,12 @@ class _ResidentScreenState extends State<ResidentPage> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // จัดข้อความให้ตรงกลางแนวนอน
           children: [
             Text(
-              'Solar Rooftop ${matched['kw']} kW',
+              'Solar Rooftop \n ${matched['kw']} kW',
+              textAlign: TextAlign.center, // จัดข้อความให้ตรงกลางในแนวนอน
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -122,7 +125,8 @@ class _ResidentScreenState extends State<ResidentPage> {
             ),
             SizedBox(height: 10),
             Text(
-              '${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
+              'ราคา ${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -131,6 +135,7 @@ class _ResidentScreenState extends State<ResidentPage> {
             SizedBox(height: 10),
             Text(
               'เหมาะกับคุณ!',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.green[700],
@@ -264,7 +269,7 @@ class _ResidentScreenState extends State<ResidentPage> {
             ),
           ),
           Positioned(
-            bottom: 280,
+            bottom: 260,
             left: 20,
             right: 20,
             child: Row(
@@ -298,7 +303,13 @@ class _ResidentScreenState extends State<ResidentPage> {
               ],
             ),
           ),
-          if (_resultWidget != null) _resultWidget!,
+          if (_resultWidget != null)
+            Positioned(
+              bottom: 60, // ต่ำกว่าปุ่มที่อยู่ที่ bottom: 280
+              left: 20,
+              right: 20,
+              child: _resultWidget!,
+            ),
         ],
       ),
     );
