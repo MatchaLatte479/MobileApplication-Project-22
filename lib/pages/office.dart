@@ -174,7 +174,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               const Text('2. อัตราค่าไฟต่อเดือน (บาท)'),
               const SizedBox(height: 8),
               SizedBox(
@@ -192,12 +192,12 @@ class _OfficeScreenState extends State<OfficeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Center(
                 child: Image.asset(
                   'assets/images/bill.jpg',
-                  width: 300,
-                  height: 193,
+                  width: 500,
+                  height: 300,
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 300,
                     height: 193,
@@ -206,7 +206,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -238,7 +238,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               if (showResult && selectedSystem != null)
                 Container(
                   width: double.infinity,
@@ -264,11 +264,6 @@ class _OfficeScreenState extends State<OfficeScreen> {
                       ),
                       Text(
                         'ลดค่าไฟได้ ${_formatNumber(selectedSystem!['saving'])} บาทต่อเดือน',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'ระยะเวลาคืนทุนประมาณ ${((selectedSystem!['price'] + selectedSystem!['roof_cost']) / selectedSystem!['saving']).toStringAsFixed(1)} เดือน',
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 8),
