@@ -77,74 +77,81 @@ class _ResidentScreenState extends State<ResidentPage> {
     double totalKWhPerDay = 0.0;
 
     selectedAppliances.forEach((name, controllers) {
-      int quantity = int.tryParse(controllers['quantity']?.text ?? '') ?? 0;
-      int hours = int.tryParse(controllers['hours']?.text ?? '') ?? 0;
+      // ตรวจสอบว่า controllers['quantity'] และ controllers['hours'] ไม่เป็น null
+      int quantity = int.tryParse(controllers['quantity']?.text ?? '0') ?? 0;
+      int hours = int.tryParse(controllers['hours']?.text ?? '0') ?? 0;
       double power = powerRates[name] ?? 0.0;
 
       totalKWhPerDay += quantity * hours * power;
     });
 
-    double estimatedKW = (totalKWhPerDay / 4).ceilToDouble();
+    if (totalKWhPerDay == 0.0) {
+      // ถ้าคำนวณออกมาเป็น 0.0 (ยังไม่ได้กรอกข้อมูล), ไม่แสดงผล
+      setState(() {
+        _resultWidget = null;
+      });
+    } else {
+      double estimatedKW = (totalKWhPerDay / 4).ceilToDouble();
 
-    final List<Map<String, dynamic>> solarOptions = [
-      {'kw': 3, 'price': 98000},
-      {'kw': 5, 'price': 135000},
-      {'kw': 10, 'price': 215000},
-      {'kw': 15, 'price': 300000},
-      {'kw': 20, 'price': 390000},
-      {'kw': 30, 'price': 530000},
-      {'kw': 60, 'price': 1200000},
-      {'kw': 100, 'price': 2000000},
-    ];
+      final List<Map<String, dynamic>> solarOptions = [
+        {'kw': 3, 'price': 98000},
+        {'kw': 5, 'price': 135000},
+        {'kw': 10, 'price': 215000},
+        {'kw': 15, 'price': 300000},
+        {'kw': 20, 'price': 390000},
+        {'kw': 30, 'price': 530000},
+        {'kw': 60, 'price': 1200000},
+        {'kw': 100, 'price': 2000000},
+      ];
 
-    final matched = solarOptions.firstWhere(
-      (option) => option['kw'] >= estimatedKW,
-      orElse: () => solarOptions.last,
-    );
-
-    setState(() {
-      _resultWidget = Container(
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(
-          color: Colors.green[100],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment:
-              CrossAxisAlignment.center, // จัดข้อความให้ตรงกลางแนวนอน
-          children: [
-            Text(
-              'Solar Rooftop \n ${matched['kw']} kW',
-              textAlign: TextAlign.center, // จัดข้อความให้ตรงกลางในแนวนอน
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'ราคา ${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'เหมาะกับคุณ!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.green[700],
-              ),
-            ),
-          ],
-        ),
+      final matched = solarOptions.firstWhere(
+        (option) => option['kw'] >= estimatedKW,
+        orElse: () => solarOptions.last,
       );
-    });
+
+      setState(() {
+        _resultWidget = Container(
+          padding: EdgeInsets.all(16),
+          margin: EdgeInsets.only(top: 20),
+          decoration: BoxDecoration(
+            color: Colors.green[100],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Solar Rooftop \n ${matched['kw']} kW',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'ราคา ${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'เหมาะกับคุณ!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.green[700],
+                ),
+              ),
+            ],
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -297,15 +304,33 @@ class _ResidentScreenState extends State<ResidentPage> {
                     ),
                     minimumSize: Size(150, 50),
                   ),
-                  onPressed: _calculate,
-                  child: Text('Calculate'),
+                  onPressed: () {
+                    bool allFieldsFilled = true;
+
+                    selectedAppliances.forEach((name, controllers) {
+                      // ตรวจสอบว่า 'quantity' และ 'hours' มีค่าไม่เป็น null และไม่ว่าง
+                      if ((controllers['quantity']?.text.isEmpty ?? true) ||
+                          (controllers['hours']?.text.isEmpty ?? true)) {
+                        allFieldsFilled = false;
+                      }
+                    });
+
+                    if (allFieldsFilled) {
+                      _calculate();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('กรุณากรอกข้อมูลให้ครบทุกช่อง')),
+                      );
+                    }
+                  },
+                  child: Text('Calculate'), // ตรวจสอบว่าใส่ ',' ก่อนหน้านี้
                 ),
               ],
             ),
           ),
           if (_resultWidget != null)
             Positioned(
-              bottom: 60, // ต่ำกว่าปุ่มที่อยู่ที่ bottom: 280
+              bottom: 60,
               left: 20,
               right: 20,
               child: _resultWidget!,
