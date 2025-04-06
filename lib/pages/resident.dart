@@ -121,6 +121,10 @@ class _ResidentScreenState extends State<ResidentPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Text(
+                '😊',
+                style: TextStyle(fontSize: 40),
+              ),
               Text(
                 'Solar Rooftop \n ${matched['kw']} kW',
                 textAlign: TextAlign.center,
@@ -330,7 +334,7 @@ class _ResidentScreenState extends State<ResidentPage> {
           ),
           if (_resultWidget != null)
             Positioned(
-              bottom: 60,
+              bottom: 10,
               left: 20,
               right: 20,
               child: _resultWidget!,
