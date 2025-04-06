@@ -112,7 +112,6 @@ class _OfficeScreenState extends State<OfficeScreen> {
     }
 
     final double monthlyUsage = double.parse(electricityUsageController.text);
-    final double monthlyCost = double.parse(electricityCostController.text);
 
     // คำนวณกำลังไฟฟ้าที่ต้องการ (ใช้ค่าเฉลี่ย 4.5 ชั่วโมงแสงอาทิตย์ต่อวัน)
     final double requiredKw = monthlyUsage / (30 * 4.5);
@@ -196,7 +195,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
               const SizedBox(height: 16),
               Center(
                 child: Image.asset(
-                  'assets/images/bill.png',
+                  'assets/images/bill.jpg',
                   width: 300,
                   height: 193,
                   errorBuilder: (context, error, stackTrace) => Container(
@@ -255,12 +254,12 @@ class _OfficeScreenState extends State<OfficeScreen> {
                         style: TextStyle(fontSize: 40),
                       ),
                       Text(
-                        'Solar Rooftop ${selectedSystem!['kw']} kW',
+                        'Solar Rooftop \n      ${selectedSystem!['kw']} kW',
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '${_formatNumber(selectedSystem!['price'] + selectedSystem!['roof_cost'])} บาท',
+                        'ราคา ${_formatNumber(selectedSystem!['price'] + selectedSystem!['roof_cost'])} บาท',
                         style: const TextStyle(fontSize: 18),
                       ),
                       Text(
