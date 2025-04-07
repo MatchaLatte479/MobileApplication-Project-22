@@ -8,8 +8,10 @@ class CalculatorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('คำนวณ Solar Cell'),
+        backgroundColor: const Color(0xFFF5F5F5),
       ),
       body: Center(
         child: Padding(
