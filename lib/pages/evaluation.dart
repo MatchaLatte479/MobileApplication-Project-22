@@ -398,7 +398,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
           Text(
             "${index + 1}. ${questions[index]}",
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

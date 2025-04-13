@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/model/db_helper.dart';
 
 class ResidentPage extends StatefulWidget {
   @override
@@ -17,6 +18,8 @@ class _ResidentScreenState extends State<ResidentPage> {
 
   final Map<String, Map<String, TextEditingController>> selectedAppliances = {};
   Widget? _resultWidget;
+  double? _lastEstimatedKW;
+  int? _lastPrice;
 
   void addAppliance(BuildContext context, TapDownDetails details) {
     final RenderBox overlay =
@@ -77,16 +80,13 @@ class _ResidentScreenState extends State<ResidentPage> {
     double totalKWhPerDay = 0.0;
 
     selectedAppliances.forEach((name, controllers) {
-      // ตรวจสอบว่า controllers['quantity'] และ controllers['hours'] ไม่เป็น null
       int quantity = int.tryParse(controllers['quantity']?.text ?? '0') ?? 0;
       int hours = int.tryParse(controllers['hours']?.text ?? '0') ?? 0;
       double power = powerRates[name] ?? 0.0;
-
       totalKWhPerDay += quantity * hours * power;
     });
 
     if (totalKWhPerDay == 0.0) {
-      // ถ้าคำนวณออกมาเป็น 0.0 (ยังไม่ได้กรอกข้อมูล), ไม่แสดงผล
       setState(() {
         _resultWidget = null;
       });
@@ -109,6 +109,12 @@ class _ResidentScreenState extends State<ResidentPage> {
         orElse: () => solarOptions.last,
       );
 
+      _lastEstimatedKW = matched['kw'].toDouble();
+      _lastPrice = matched['price'];
+
+      // เรียกถามชื่อและบันทึกทันที
+      _showSaveDialog(context, _lastEstimatedKW!, _lastPrice!);
+
       setState(() {
         _resultWidget = Container(
           padding: EdgeInsets.all(16),
@@ -121,41 +127,92 @@ class _ResidentScreenState extends State<ResidentPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                '😊',
-                style: TextStyle(fontSize: 40),
-              ),
+              const Text('😊', style: TextStyle(fontSize: 40)),
               Text(
                 'Solar Rooftop \n ${matched['kw']} kW',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Text(
                 'ราคา ${matched['price'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Text(
                 'เหมาะกับคุณ!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.green[700],
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.green[700]),
               ),
             ],
           ),
         );
       });
     }
+  }
+
+  void _showSaveDialog(BuildContext context, double estimatedKW, int price) {
+    final TextEditingController nameController = TextEditingController();
+
+    final detail = selectedAppliances.entries.map((entry) {
+      final name = entry.key;
+      final quantity = entry.value['quantity']?.text ?? '0';
+      final hours = entry.value['hours']?.text ?? '0';
+      return '$name: $quantity ชิ้น, $hours ชม.';
+    }).join('\n');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('ตั้งชื่อบ้าน'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                hintText: 'เช่น บ้าน A',
+                enabledBorder: UnderlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Colors.black), // กำหนดสีของเส้นใต้
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.blue), // เปลี่ยนสีเส้นใต้เมื่อฟอร์มถูกเลือก
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('ยกเลิก'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isNotEmpty) {
+                final data =
+                    'Solar Rooftop $estimatedKW kW\nราคา: ${price.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')} บาท';
+                await DBHelper().insertHistory(
+                  name,
+                  data,
+                  detail, // 👈 บันทึกข้อมูลรายการเครื่องใช้ไฟฟ้า
+                );
+
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('บันทึกข้อมูลเรียบร้อยแล้ว')),
+                );
+              }
+            },
+            child: Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -310,23 +367,35 @@ class _ResidentScreenState extends State<ResidentPage> {
                   ),
                   onPressed: () {
                     bool allFieldsFilled = true;
+                    bool allFieldsAreNumbers = true;
 
                     selectedAppliances.forEach((name, controllers) {
-                      // ตรวจสอบว่า 'quantity' และ 'hours' มีค่าไม่เป็น null และไม่ว่าง
-                      if ((controllers['quantity']?.text.isEmpty ?? true) ||
-                          (controllers['hours']?.text.isEmpty ?? true)) {
+                      final quantityText = controllers['quantity']?.text ?? '';
+                      final hoursText = controllers['hours']?.text ?? '';
+
+                      if (quantityText.isEmpty || hoursText.isEmpty) {
                         allFieldsFilled = false;
+                      } else {
+                        if (int.tryParse(quantityText) == null ||
+                            int.tryParse(hoursText) == null) {
+                          allFieldsAreNumbers = false;
+                        }
                       }
                     });
 
-                    if (allFieldsFilled) {
-                      _calculate();
-                    } else {
+                    if (!allFieldsFilled) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('กรุณากรอกข้อมูลให้ครบทุกช่อง')),
+                        SnackBar(content: Text('กรอกข้อมูลให้ครบทุกช่อง')),
                       );
+                    } else if (!allFieldsAreNumbers) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('กรอกเฉพาะตัวเลขเท่านั้น')),
+                      );
+                    } else {
+                      _calculate();
                     }
                   },
+
                   child: Text('Calculate'), // ตรวจสอบว่าใส่ ',' ก่อนหน้านี้
                 ),
               ],
