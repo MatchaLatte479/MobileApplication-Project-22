@@ -194,8 +194,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
         title: const Row(
           children: [
             Text('อาคารสำนักงาน'),
-            SizedBox(width: 8),
-            Icon(Icons.edit, size: 18),
+            SizedBox(width: 5),
           ],
         ),
       ),
@@ -214,9 +213,11 @@ class _OfficeScreenState extends State<OfficeScreen> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15)),
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none,
+                  ),
                   filled: true,
-                  fillColor: Colors.grey[200],
+                  fillColor: Color(0xFFD9D9D9),
                 ),
               ),
             ),
@@ -227,13 +228,15 @@ class _OfficeScreenState extends State<OfficeScreen> {
               width: 217,
               height: 48,
               child: TextField(
-                controller: electricityCostController,
+                controller: electricityUsageController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15)),
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none,
+                  ),
                   filled: true,
-                  fillColor: Colors.grey[200],
+                  fillColor: Color(0xFFD9D9D9),
                 ),
               ),
             ),

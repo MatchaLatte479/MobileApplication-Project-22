@@ -222,10 +222,6 @@ class _ResidentScreenState extends State<ResidentPage> {
         title: Row(
           children: [
             Text('บ้านพักอาศัย'),
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {},
-            ),
           ],
         ),
         actions: [
