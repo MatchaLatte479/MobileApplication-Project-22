@@ -68,9 +68,9 @@ class InformationPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('✅ เพิ่มพื้นที่สีเขียว ช่วยดูดซับก๊าซคาร์บอนไดออกไซด์'),
+                          Text('     ✅ เพิ่มพื้นที่สีเขียว ช่วยดูดซับก๊าซคาร์บอนไดออกไซด์'),
                           SizedBox(height: 8),
-                          Text('✅ ไม่ก่อให้เกิดมลพิษหรือปล่อยก๊าซคาร์บอนไดออกไซด์'),
+                          Text('     ✅ ไม่ก่อให้เกิดมลพิษหรือปล่อยก๊าซคาร์บอนไดออกไซด์'),
                         ],
                       ),
                     ),

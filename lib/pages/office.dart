@@ -228,7 +228,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
               width: 217,
               height: 48,
               child: TextField(
-                controller: electricityUsageController,
+                controller: electricityCostController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(

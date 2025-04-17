@@ -37,6 +37,7 @@ dependencies:
   sqflite: ^2.4.2
   path: ^1.9.1
   path_provider: ^2.1.5
+  google_maps_flutter: ^2.12.1
 
 dev_dependencies:
   flutter_test:
@@ -66,7 +67,7 @@ flutter:
    - assets/images/bill.jpg
    - assets/images/profile.png
    - assets/images/informationpic1.jpg
-   - assets/images/informationpic2.jpg
+   - assets/images/informationpic2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
