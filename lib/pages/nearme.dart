@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class NearMePage extends StatelessWidget {
+class NearMePage extends StatefulWidget {
   const NearMePage({super.key});
 
   void _onNavigatePressed(BuildContext context) {
@@ -11,6 +12,19 @@ class NearMePage extends StatelessWidget {
         duration: Duration(seconds: 1),
       ),
     );
+  }
+
+  @override
+  State<NearMePage> createState() => _NearMePageState();
+}
+
+class _NearMePageState extends State<NearMePage> {
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(13.8600, 100.5140); // พิกัดนนทบุรี
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   @override

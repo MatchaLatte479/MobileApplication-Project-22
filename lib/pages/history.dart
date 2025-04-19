@@ -9,37 +9,118 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  List<String> historyItems = [
-    'บ้านพักอาศัย',
-    'อาคารสำนักงาน',
-    'อาคารสำนักงาน',
-  ];
+  List<Map<String, dynamic>> history = [];
 
-  void editItem(int index) {
-    TextEditingController controller = TextEditingController(text: historyItems[index]);
+  Future<void> loadHistory() async {
+    final data = await DBHelper().getHistory();
+    setState(() {
+      history = data;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadHistory();
+  }
+
+  void _deleteEntry(int id) async {
+    await DBHelper().deleteHistory(id);
+    loadHistory();
+  }
+
+  void _showDetail(Map<String, dynamic> item) {
+    final dataLines = item['data'].toString().split('\n');
+    final detailLines = item['detail'].toString().split('\n');
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('แก้ไขรายการ'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: 'กรอกข้อความใหม่'),
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          item['name'],
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        content: Center(
+          child: SingleChildScrollView(
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              border: TableBorder.all(color: Colors.black),
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+              },
+              children: [
+                if (dataLines.isNotEmpty) ...[
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('ขนาด'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        dataLines.first.replaceAll('Solar Rooftop ', ''),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ]),
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('ราคา'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        dataLines.last.replaceAll('ราคา ', ''),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ]),
+                ],
+
+                if (detailLines.any((line) => line.contains('ประหยัดเดือนละ'))) ...[
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('ประหยัดเดือนละ'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        detailLines
+                            .firstWhere((line) => line.contains('ประหยัดเดือนละ'))
+                            .replaceAll('ประหยัดเดือนละ ', ''),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ]),
+                ] else ...[
+                  for (int i = 0; i < detailLines.length; i += 2)
+                    TableRow(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          i == 0 ? 'เครื่องใช้ไฟฟ้า' : 'จำนวนชั่วโมงที่ใช้',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          detailLines[i].trim(),
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ]),
+                ],
+              ],
+            ),
+          ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('ยกเลิก'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                historyItems[index] = controller.text;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('บันทึก'),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('ปิด'),
           ),
         ],
       ),
@@ -67,26 +148,38 @@ class _HistoryPageState extends State<HistoryPage> {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         itemCount: historyItems.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ListTile(
-              title: Text(historyItems[index]),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, size: 20),
-                    onPressed: () => editItem(index),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                    onPressed: () => deleteItem(index),
-                  ),
-                ],
+          final item = history[index];
+          return InkWell(
+            onTap: () => _showDetail(item),
+            child: SizedBox(
+              width: 336,
+              height: 68,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item['name'],
+                        style: const TextStyle(fontSize: 16),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline_outlined,
+                          color: Colors.red),
+                      onPressed: () => _deleteEntry(item['id']),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
