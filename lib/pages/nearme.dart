@@ -77,10 +77,10 @@ class _NearMePageState extends State<NearMePage> {
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.navigation_outlined),
-                    onPressed: () => _onNavigatePressed(context),
-                  ),
+                  // IconButton(
+                  //   icon: const Icon(Icons.navigation_outlined),
+                  //   // onPressed: () => _onNavigatePressed(context),
+                  // ),
                 ],
               ),
             ),
