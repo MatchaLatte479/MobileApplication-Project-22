@@ -33,7 +33,7 @@ class _NavigationPageState extends State<NavigationPage> {
         
         currentIndex: myCurrentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFF5F5F5),
         selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.black,
         

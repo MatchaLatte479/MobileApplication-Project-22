@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/navbar/navbar.dart';
-// import 'pages/login.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,9 +12,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Solar Cell Calculator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Color(0xFFF5F5F5),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(0xFFF5F5F5),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black),
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: Colors.blue,
+        ),
       ),
-      home: NavigationPage(), 
+      home: NavigationPage(),
     );
   }
 }

@@ -1,0 +1,2 @@
+C:/ITDS283_6687099/MobileApplication-Project-22/android/app/.cxx/Debug/3w18341i/x86_64/CMakeFiles/edit_cache.dir
+C:/ITDS283_6687099/MobileApplication-Project-22/android/app/.cxx/Debug/3w18341i/x86_64/CMakeFiles/rebuild_cache.dir

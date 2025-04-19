@@ -3,7 +3,7 @@ import 'evaluation.dart';
 import 'calculator.dart';
 import 'history.dart';
 import 'nearme.dart';
-import 'information.dart'; // เพิ่ม import หน้าข้อมูลติดตั้ง
+import 'information.dart'; 
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
