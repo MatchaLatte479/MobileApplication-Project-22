@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/navbar/navbar.dart';
-
+import 'package:project/pages/login.dart';
 void main() {
   runApp(MyApp());
 }
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: NavigationPage(),
+      home: LoginPage(), 
     );
   }
 }

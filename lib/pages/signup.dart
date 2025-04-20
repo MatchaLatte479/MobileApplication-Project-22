@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // For navigation back to login
+import 'login.dart';
+import 'package:project/model/db_helper.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _dbHelper = DBHelper();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -20,13 +23,64 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  void _createAccount() {
+  Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
-      // Add your account creation logic here
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        // Check if email already exists
+        final emailExists =
+            await _dbHelper.getUserByEmail(_emailController.text);
+        if (emailExists != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Email already exists. Please use another email.')),
+          );
+          return;
+        }
+
+        // Check if username already exists by trying to find a user with this username
+        // Note: You might need to add a getUserByUsername method to DBHelper for proper checking
+        final usernameExists =
+            await _dbHelper.loginUser(_usernameController.text, '');
+        if (usernameExists != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    'Username already exists. Please choose another username.')),
+          );
+          return;
+        }
+
+        // Register the new user
+        await _dbHelper.registerUser(
+          _usernameController.text,
+          _emailController.text,
+          _passwordController.text,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Account created successfully. Please log in.')),
+        );
+
+        // Return to login page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error creating account: $e')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -34,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
@@ -71,6 +125,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter email';
                       }
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
                       return null;
                     },
                   ),
@@ -90,6 +148,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter username';
+                      }
+                      if (value.length < 3) {
+                        return 'Username must be at least 3 characters';
                       }
                       return null;
                     },
@@ -112,6 +173,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter password';
                       }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
                       return null;
                     },
                   ),
@@ -120,17 +184,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: 218,
                   height: 48,
-                  child: ElevatedButton(
-                    onPressed: _createAccount,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                    child: const Text('Create account'),
-                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _createAccount,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          child: const Text('Create account'),
+                        ),
                 ),
                 const SizedBox(height: 20),
                 Row(
