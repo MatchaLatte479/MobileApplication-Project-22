@@ -10,7 +10,7 @@ class _ResidentScreenState extends State<ResidentPage> {
   final List<Map<String, dynamic>> appliances = [
     {'name': 'หลอดไฟ', 'icon': Icons.lightbulb},
     {'name': 'ตู้เย็น', 'icon': Icons.kitchen},
-    {'name': 'พัดลม', 'icon': Icons.toys},
+    {'name': 'พัดลม', 'icon': Icons.wind_power},
     {'name': 'แอร์', 'icon': Icons.ac_unit},
     {'name': 'ทีวี', 'icon': Icons.tv},
     {'name': 'ไมโครเวฟ', 'icon': Icons.microwave},
@@ -199,7 +199,7 @@ class _ResidentScreenState extends State<ResidentPage> {
                 await DBHelper().insertHistory(
                   name,
                   data,
-                  detail, // 👈 บันทึกข้อมูลรายการเครื่องใช้ไฟฟ้า
+                  detail, // บันทึกข้อมูลรายการเครื่องใช้ไฟฟ้า
                 );
 
                 Navigator.of(ctx).pop();
@@ -265,19 +265,20 @@ class _ResidentScreenState extends State<ResidentPage> {
                         padding: EdgeInsets.symmetric(vertical: 12.5),
                         child: Row(
                           children: [
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              icon:
-                                  Icon(Icons.remove_circle, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  selectedAppliances[key]?['quantity']
-                                      ?.dispose();
-                                  selectedAppliances[key]?['hours']?.dispose();
-                                  selectedAppliances.remove(key);
-                                });
-                              },
-                            ),
+                           IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.remove_circle,
+                                    color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedAppliances[key]?['quantity']
+                                        ?.dispose();
+                                    selectedAppliances[key]?['hours']
+                                        ?.dispose();
+                                    selectedAppliances.remove(key);
+                                  });
+                                },
+                              ),
                             SizedBox(width: 5),
                             Expanded(
                               child: Text(key, style: TextStyle(fontSize: 16)),
@@ -333,7 +334,7 @@ class _ResidentScreenState extends State<ResidentPage> {
             ),
           ),
           Positioned(
-            bottom: 260,
+            bottom: 150,
             left: 20,
             right: 20,
             child: Row(
@@ -354,7 +355,7 @@ class _ResidentScreenState extends State<ResidentPage> {
                 SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFF31D176),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),

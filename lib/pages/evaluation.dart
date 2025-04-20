@@ -148,7 +148,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD9D9D9),
+                  backgroundColor: Color.fromARGB(255, 217, 217, 217),
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

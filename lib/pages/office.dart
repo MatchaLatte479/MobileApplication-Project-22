@@ -277,7 +277,7 @@ class _OfficeScreenState extends State<OfficeScreen> {
                 const SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF31D176),
                     foregroundColor: Colors.white,
                     minimumSize: const Size(150, 50),
                   ),
