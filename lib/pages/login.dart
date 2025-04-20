@@ -103,14 +103,17 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: 'Username',
+                      filled: true,
+                      fillColor: Color(0xffD9D9D9),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Color.fromARGB(255, 0, 153, 255)),
+                        borderSide:
+                            BorderSide(color: Colors.blue),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide:
-                            BorderSide(color: Color.fromARGB(255, 0, 153, 255), width: 2),
+                        borderSide: BorderSide(
+                            color: Colors.blue, width: 2),
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -129,9 +132,19 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      filled: true,
+                      fillColor: Color(0xffD9D9D9),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide:
+                            BorderSide(color: Colors.blue, width: 2),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.black),
                       ),
                     ),
                     obscureText: true,
@@ -149,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                       : ElevatedButton(
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow,
+                            backgroundColor: Color(0xFFEDCA7F),
                             foregroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
