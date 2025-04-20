@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/navbar/navbar.dart';
-
+import 'package:project/pages/login.dart';
 void main() {
   runApp(MyApp());
 }
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: NavigationPage(),
+      home: LoginPage(), 
     );
   }
 }
@@ -49,7 +48,6 @@ class SlideRightTransitionsBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    // ใช้ CurvedAnimation เพื่อให้ transition ลื่นและเร็วขึ้น
     final curvedAnimation = CurvedAnimation(
       parent: animation,
       curve: Curves.easeOutCubic,
@@ -57,8 +55,8 @@ class SlideRightTransitionsBuilder extends PageTransitionsBuilder {
 
     return SlideTransition(
       position: Tween<Offset>(
-        begin: const Offset(1.0, 0.0), // เริ่มจากขวา
-        end: Offset.zero, // จบที่ตรงกลาง
+        begin: const Offset(1.0, 0.0), 
+        end: Offset.zero, 
       ).animate(curvedAnimation),
       child: child,
     );

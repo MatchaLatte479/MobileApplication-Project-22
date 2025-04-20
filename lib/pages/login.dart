@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'signup.dart'; // Make sure this import exists
-import 'calculator.dart';
+import 'signup.dart';
+import 'package:project/model/db_helper.dart';
+import 'package:project/model/user_model.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -10,6 +12,41 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _dbHelper = DBHelper();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserExists();
+  }
+
+  Future _checkUserExists() async {
+    // Check if any user exists by trying to get the first user
+    try {
+      final users = await _dbHelper.getUserByEmail('admin@example.com');
+      if (users == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No user account found. Please sign up first.'),
+              action: SnackBarAction(
+                label: 'Sign Up',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                  );
+                },
+              ),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      print('Error checking user: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -18,17 +55,45 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() {
+  Future _login() async {
     if (_formKey.currentState!.validate()) {
-      if (_usernameController.text == 'admin' && _passwordController.text == '1234') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => CalculatorPage()),
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        final user = await _dbHelper.loginUser(
+          _usernameController.text,
+          _passwordController.text,
         );
-      } else {
+        if (user != null) {
+          // Create a User object from the database result
+          final loggedInUser = User.fromMap(user);
+          // Navigate to the main app
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'Invalid username or password. Please sign up if you don\'t have an account.'),
+              action: SnackBarAction(
+                label: 'Sign Up',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                  );
+                },
+              ),
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid username or password')),
+          SnackBar(content: Text('Login error: $e')),
         );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -37,13 +102,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 SizedBox(
                   width: 86,
                   height: 90,
@@ -103,17 +168,19 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: 85,
                   height: 48,
-                  child: ElevatedButton(
-                    onPressed: _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                    child: const Text('Login'),
-                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          child: const Text('Login'),
+                        ),
                 ),
                 const SizedBox(height: 20),
                 Row(
