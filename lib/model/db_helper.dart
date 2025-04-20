@@ -15,7 +15,7 @@ class DBHelper {
   }
 
   Future<Database> initDB() async {
-    final path = join(await getDatabasesPath(), 'history_v2.db');
+    final path = join(await getDatabasesPath(), 'history_v3.db');
     return await openDatabase(
       path,
       version: 2,
@@ -28,7 +28,7 @@ class DBHelper {
             detail TEXT
           )
         ''');
-        
+
         await db.execute('''
           CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +55,13 @@ class DBHelper {
     );
   }
 
-  // Existing history methods
+  Future<bool> anyUserExists() async {
+    final dbClient = await db;
+    final result =
+        await dbClient.rawQuery('SELECT COUNT(*) as count FROM users');
+    return Sqflite.firstIntValue(result) != 0;
+  }
+
   Future<void> insertHistory(String name, String data, String detail) async {
     final dbClient = await db;
     await dbClient.insert('history', {
@@ -75,28 +81,29 @@ class DBHelper {
     await dbClient.delete('history', where: 'id = ?', whereArgs: [id]);
   }
 
-  // New methods for user authentication
-  Future<int> registerUser(String username, String email, String password) async {
+  Future<int> registerUser(
+      String username, String email, String password) async {
     final dbClient = await db;
     final now = DateTime.now().toIso8601String();
-    
+
     return await dbClient.insert('users', {
       'username': username,
       'email': email,
-      'password': password, // In production, ensure password is hashed
+      'password': password,
       'created_at': now,
     });
   }
 
-  Future<Map<String, dynamic>?> loginUser(String username, String password) async {
+  Future<Map<String, dynamic>?> loginUser(
+      String username, String password) async {
     final dbClient = await db;
     List<Map<String, dynamic>> result = await dbClient.query(
       'users',
       where: 'username = ? AND password = ?',
-      whereArgs: [username, password], // In production, implement proper password verification
+      whereArgs: [username, password],
       limit: 1,
     );
-    
+
     if (result.isNotEmpty) {
       return result.first;
     }
@@ -111,7 +118,7 @@ class DBHelper {
       whereArgs: [email],
       limit: 1,
     );
-    
+
     if (result.isNotEmpty) {
       return result.first;
     }
@@ -126,7 +133,7 @@ class DBHelper {
       whereArgs: [id],
       limit: 1,
     );
-    
+
     if (result.isNotEmpty) {
       return result.first;
     }
@@ -147,7 +154,7 @@ class DBHelper {
     final dbClient = await db;
     return await dbClient.update(
       'users',
-      {'password': newPassword}, // In production, ensure password is hashed
+      {'password': newPassword},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -160,5 +167,20 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<Map<String, dynamic>?> getUserByUsername(String username) async {
+    final dbClient = await db;
+    List<Map<String, dynamic>> result = await dbClient.query(
+      'users',
+      where: 'username = ?',
+      whereArgs: [username],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return null;
   }
 }

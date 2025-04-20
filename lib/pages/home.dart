@@ -3,11 +3,19 @@ import 'evaluation.dart';
 import 'calculator.dart';
 import 'history.dart';
 import 'nearme.dart';
-import 'information.dart'; 
+import 'information.dart';
+import 'package:project/model/user_model.dart'; // เพิ่มการ import User
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final User user;
 
+  const HomePage({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,13 +39,13 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "สวัสดี Solar Cell",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // ทักทายผู้ใช้ด้วยชื่อ
+            Text(
+              "สวัสดี คุณ ${widget.user.username}",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
 
-            // <<< เปลี่ยนเป็น GestureDetector เพื่อให้กดได้ >>>
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -59,8 +67,14 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("1 kW = ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("101 ต้น", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green)),
+                        Text("1 kW = ",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text("101 ต้น",
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green)),
                       ],
                     ),
                   ],
@@ -74,6 +88,7 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
+
             GridView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

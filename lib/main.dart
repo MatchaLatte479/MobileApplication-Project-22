@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project/pages/login.dart';
+import 'package:project/navbar/navbar.dart';
+import 'package:project/model/user_model.dart'; // โมเดล User
+
 void main() {
   runApp(MyApp());
 }
@@ -32,7 +35,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: LoginPage(), 
+      home: LoginPage(), // แสดง LoginPage ก่อน
     );
   }
 }
@@ -55,8 +58,8 @@ class SlideRightTransitionsBuilder extends PageTransitionsBuilder {
 
     return SlideTransition(
       position: Tween<Offset>(
-        begin: const Offset(1.0, 0.0), 
-        end: Offset.zero, 
+        begin: const Offset(1.0, 0.0),
+        end: Offset.zero,
       ).animate(curvedAnimation),
       child: child,
     );

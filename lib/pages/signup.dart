@@ -39,19 +39,24 @@ class _SignUpPageState extends State<SignUpPage> {
                 content:
                     Text('Email already exists. Please use another email.')),
           );
+          setState(() {
+            _isLoading = false;
+          });
           return;
         }
 
-        // Check if username already exists by trying to find a user with this username
-        // Note: You might need to add a getUserByUsername method to DBHelper for proper checking
+        // Check if username already exists
         final usernameExists =
-            await _dbHelper.loginUser(_usernameController.text, '');
+            await _dbHelper.getUserByUsername(_usernameController.text);
         if (usernameExists != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(
                     'Username already exists. Please choose another username.')),
           );
+          setState(() {
+            _isLoading = false;
+          });
           return;
         }
 
@@ -67,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
               content: Text('Account created successfully. Please log in.')),
         );
 
-        // Return to login page
+        // Go to login page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),

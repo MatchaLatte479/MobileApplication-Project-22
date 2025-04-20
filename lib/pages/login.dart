@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
+import 'package:project/navbar/navbar.dart';
 import 'package:project/model/db_helper.dart';
 import 'package:project/model/user_model.dart';
 
@@ -16,39 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _checkUserExists();
-  }
-
-  Future _checkUserExists() async {
-    // Check if any user exists by trying to get the first user
-    try {
-      final users = await _dbHelper.getUserByEmail('admin@example.com');
-      if (users == null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('No user account found. Please sign up first.'),
-              action: SnackBarAction(
-                label: 'Sign Up',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()),
-                  );
-                },
-              ),
-            ),
-          );
-        });
-      }
-    } catch (e) {
-      print('Error checking user: $e');
-    }
-  }
-
-  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
@@ -57,32 +25,38 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _login() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      FocusScope.of(context).unfocus();
+      setState(() => _isLoading = true);
+
       try {
         final user = await _dbHelper.loginUser(
-          _usernameController.text,
-          _passwordController.text,
+          _usernameController.text.trim(),
+          _passwordController.text.trim(),
         );
+
         if (user != null) {
-          // Create a User object from the database result
-          final loggedInUser = User.fromMap(user);
-          // Navigate to the main app
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationPage(user: User.fromMap(user)),
+            ),
+          );
         } else {
+          final anyUserExists = await _dbHelper.anyUserExists();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                  'Invalid username or password. Please sign up if you don\'t have an account.'),
-              action: SnackBarAction(
-                label: 'Sign Up',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()),
-                  );
-                },
-              ),
+              content: Text(anyUserExists
+                  ? 'Invalid username or password'
+                  : 'No user account found. Please sign up first.'),
+              action: anyUserExists
+                  ? null
+                  : SnackBarAction(
+                      label: 'Sign Up',
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                      ),
+                    ),
             ),
           );
         }
@@ -91,9 +65,7 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(content: Text('Login error: $e')),
         );
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -133,14 +105,13 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: 'Username',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
+                        borderSide:
+                            const BorderSide(color: Colors.black, width: 2),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter username';
-                      }
-                      return null;
-                    },
+                    validator: (value) => value?.trim().isEmpty ?? true
+                        ? 'Please enter username'
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -153,15 +124,13 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: 'Password',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                     ),
                     obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter password';
-                      }
-                      return null;
-                    },
+                    validator: (value) => value?.trim().isEmpty ?? true
+                        ? 'Please enter password'
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -186,27 +155,15 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Don\'t have an account? ',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    const Text('Don\'t have an account? '),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
                       ),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
+                      child: const Text('Sign Up',
+                          style: TextStyle(color: Colors.blue)),
+                    )
                   ],
                 ),
               ],
