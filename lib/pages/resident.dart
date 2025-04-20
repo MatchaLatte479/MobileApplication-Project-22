@@ -238,7 +238,7 @@ class _ResidentScreenState extends State<ResidentPage> {
         children: [
           Padding(
             padding: EdgeInsets.only(
-                left: 47.0, right: 16.0, top: 16.0, bottom: 50.0),
+                left: 16.0, right: 16.0, top: 16.0, bottom: 50.0),
             child: Column(
               children: [
                 Row(
@@ -265,8 +265,12 @@ class _ResidentScreenState extends State<ResidentPage> {
                         padding: EdgeInsets.symmetric(vertical: 12.5),
                         child: Row(
                           children: [
-                           IconButton(
+                            Container(
+                              width: 30,
+                              child: IconButton(
                                 padding: EdgeInsets.zero,
+                                constraints: BoxConstraints(),
+                                iconSize: 24,
                                 icon: Icon(Icons.remove_circle,
                                     color: Colors.red),
                                 onPressed: () {
@@ -279,7 +283,10 @@ class _ResidentScreenState extends State<ResidentPage> {
                                   });
                                 },
                               ),
-                            SizedBox(width: 5),
+                            ),
+                            SizedBox(
+                                width:
+                                    10), // Added spacing between button and text
                             Expanded(
                               child: Text(key, style: TextStyle(fontSize: 16)),
                             ),
@@ -392,8 +399,7 @@ class _ResidentScreenState extends State<ResidentPage> {
                       _calculate();
                     }
                   },
-
-                  child: Text('Calculate'), // ตรวจสอบว่าใส่ ',' ก่อนหน้านี้
+                  child: Text('Calculate'),
                 ),
               ],
             ),
