@@ -45,18 +45,16 @@ class _LoginPageState extends State<LoginPage> {
           final anyUserExists = await _dbHelper.anyUserExists();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(anyUserExists
-                  ? 'Invalid username or password'
-                  : 'No user account found. Please sign up first.'),
-              action: anyUserExists
-                  ? null
-                  : SnackBarAction(
-                      label: 'Sign Up',
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
-                      ),
-                    ),
+              content: Text(anyUserExists 
+                ? 'Invalid username or password'
+                : 'No user account found. Please sign up first.'),
+              action: anyUserExists ? null : SnackBarAction(
+                label: 'Sign Up',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpPage()),
+                ),
+              ),
             ),
           );
         }
@@ -105,13 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: 'Username',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 2),
+                        borderSide: const BorderSide(color: Colors.black, width: 2),
                       ),
                     ),
-                    validator: (value) => value?.trim().isEmpty ?? true
-                        ? 'Please enter username'
-                        : null,
+                    validator: (value) => value?.trim().isEmpty ?? true 
+                      ? 'Please enter username' 
+                      : null,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -128,9 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     obscureText: true,
-                    validator: (value) => value?.trim().isEmpty ?? true
-                        ? 'Please enter password'
-                        : null,
+                    validator: (value) => value?.trim().isEmpty ?? true 
+                      ? 'Please enter password' 
+                      : null,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -161,10 +158,8 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(builder: (context) => SignUpPage()),
                       ),
-                      child: const Text('Sign Up',
-                          style: TextStyle(color: Colors.blue)),
-                    )
-                  ],
+                      child: const Text('Sign Up', style: TextStyle(color: Colors.blue)),
+                )],
                 ),
               ],
             ),
