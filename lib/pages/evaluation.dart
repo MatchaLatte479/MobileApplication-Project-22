@@ -123,7 +123,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Color(0xFFE8C61C),
+            color: Color.fromRGBO(255, 234, 74, 1),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -227,7 +227,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Color(0xFF6DFFAC), // สีเขียวอ่อน
+            color: Color.fromRGBO(255, 234, 74, 1),
             borderRadius: BorderRadius.circular(15),
           ),
           child: const Column(
@@ -313,7 +313,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Color(0xFF6DFFAC),
+            color: Color.fromRGBO(255, 234, 74, 1),
             borderRadius: BorderRadius.circular(15),
           ),
           child: const Column(
