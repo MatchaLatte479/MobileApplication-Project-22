@@ -389,7 +389,7 @@ class _ResidentScreenState extends State<ResidentPage> {
 
                     if (!allFieldsFilled) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('กรอกข้อมูลให้ครบทุกช่อง')),
+                        SnackBar(content: Text('กรุณากรอกข้อมูลให้ครบถ้วน')),
                       );
                     } else if (!allFieldsAreNumbers) {
                       ScaffoldMessenger.of(context).showSnackBar(

@@ -56,8 +56,8 @@ class InformationPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       child: Image.asset(
                         'assets/images/informationpic1.jpg',
-                        width: 299,
-                        height: 312,
+                        width: 260,
+                        height: 260,
                         fit: BoxFit.cover,
                       ),
                     ),

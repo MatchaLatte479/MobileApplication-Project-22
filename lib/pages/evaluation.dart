@@ -123,7 +123,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Color(0xFF6DFFAC),
+            color: Color(0xFFE8C61C),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -387,7 +387,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9),
+                  color: const Color.fromARGB(255, 199, 230, 255),
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.all(12),
@@ -486,8 +486,7 @@ class _SolarEvaluationState extends State<EvaluationPage> {
       backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xFFF5F5F5),
-        title: const Text("ประเมินว่าท่านควรติดตั้ง Solar Rooftop หรือไม่?",
-            style: TextStyle(fontSize: 16)),
+        title: const Text("ประเมินว่าคุณควรติดหรือไม่?"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),

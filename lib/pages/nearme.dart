@@ -308,10 +308,10 @@ class _NearMePageState extends State<NearMePage> {
               // In a real app, you would fetch these from an API
               // Here we just add some sample locations around the given coordinates
               const stores = [
-                {name: 'Solar Expert', rating: '5.0', address: 'อำเภอปากเกร็ด นนทบุรี', distance: '0.5 กม.', lat: lat + 0.005, lng: lng + 0.005},
-                {name: 'พลังงานแสงอาทิตย์ไทย', rating: '4.8', address: '456 ถนนรัชดาภิเษก', distance: '1.2 กม.', lat: lat - 0.003, lng: lng + 0.007},
-                {name: 'ซันเพาเวอร์', rating: '4.5', address: '789 ถนนลาดพร้าว', distance: '0.8 กม.', lat: lat + 0.007, lng: lng - 0.002},
-                {name: 'HUISOLARCELL', rating: '4.9', address: '321 ถนนพระราม 9', distance: '1.5 กม.', lat: lat - 0.006, lng: lng - 0.004}
+                {name: 'Solar Expert', rating: '5', address: 'อำเภอปากเกร็ด นนทบุรี', distance: '0.5 กม.', lat: lat + 0.005, lng: lng + 0.005},
+                {name: 'พลังงานแสงอาทิตย์ไทย', rating: '4', address: '456 ถนนรัชดาภิเษก', distance: '1.2 กม.', lat: lat - 0.003, lng: lng + 0.007},
+                {name: 'ซันเพาเวอร์', rating: '4', address: '789 ถนนลาดพร้าว', distance: '0.8 กม.', lat: lat + 0.007, lng: lng - 0.002},
+                {name: 'HUISOLARCELL', rating: '4', address: '321 ถนนพระราม 9', distance: '1.5 กม.', lat: lat - 0.006, lng: lng - 0.004}
               ];
               
               stores.forEach(store => {
@@ -402,7 +402,7 @@ class _NearMePageState extends State<NearMePage> {
           'ร้านโซล่าเซลล์ใกล้ฉัน',
           style: TextStyle(color: Colors.black),
         ),
-        centerTitle: true,
+        // centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
